@@ -1,3 +1,5 @@
+[![中文](https://img.shields.io/badge/🌐-中文-red.svg)](README.zh-CN.md)
+
 # mcp-debugger
 
 A Claude Code skill for diagnosing and fixing MCP (Model Context Protocol) server configuration issues.

@@ -1,3 +1,5 @@
+[![English](https://img.shields.io/badge/🌐-English-blue.svg)](README.md)
+
 # mcp-debugger
 
 诊断和修复 MCP（Model Context Protocol）服务器配置问题的 Claude Code 技能。
