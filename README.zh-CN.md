@@ -1,6 +1,6 @@
 [![English](https://img.shields.io/badge/🌐-English-blue.svg)](README.md)
 
-# mcp-debugger
+# mcp-debugger（新手向--主要用于配置mcp时的bug处理）
 
 诊断和修复 MCP（Model Context Protocol）服务器配置问题的 Claude Code 技能。
 
