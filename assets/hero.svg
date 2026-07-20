@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 400" width="1280" height="400" role="img" aria-label="MCP Debugger — Diagnose, fix, and verify your MCP server configuration in one pass.">
+  <title>MCP Debugger — Claude Code Skill</title>
+
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0d1117"/>
+      <stop offset="100%" stop-color="#1c2128"/>
+    </linearGradient>
+    <linearGradient id="brand" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#a371f7"/>
+      <stop offset="50%" stop-color="#cf6fd1"/>
+      <stop offset="100%" stop-color="#e08552"/>
+    </linearGradient>
+    <linearGradient id="stripe" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#a371f7" stop-opacity="0"/>
+      <stop offset="50%" stop-color="#a371f7" stop-opacity="1"/>
+      <stop offset="100%" stop-color="#e08552" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#a371f7" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#a371f7" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- background -->
+  <rect width="1280" height="400" fill="url(#bg)"/>
+  <ellipse cx="640" cy="200" rx="500" ry="280" fill="url(#glow)"/>
+
+  <!-- subtle grid -->
+  <g opacity="0.05" stroke="#7d8590" stroke-width="1">
+    <line x1="0" y1="100" x2="1280" y2="100"/>
+    <line x1="0" y1="200" x2="1280" y2="200"/>
+    <line x1="0" y1="300" x2="1280" y2="300"/>
+    <line x1="320" y1="0" x2="320" y2="400"/>
+    <line x1="640" y1="0" x2="640" y2="400"/>
+    <line x1="960" y1="0" x2="960" y2="400"/>
+  </g>
+
+  <!-- top eyebrow -->
+  <text x="640" y="58" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#a371f7" letter-spacing="3.5">CLAUDE CODE SKILL · MIT LICENSED</text>
+
+  <!-- icon -->
+  <g transform="translate(640, 120)">
+    <circle r="38" fill="#a371f7" fill-opacity="0.12" stroke="#a371f7" stroke-opacity="0.4" stroke-width="1.5"/>
+    <text x="0" y="13" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI Emoji', sans-serif" font-size="40">🔧</text>
+  </g>
+
+  <!-- main wordmark -->
+  <text x="640" y="190" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="64" font-weight="800" fill="#f0f6fc" letter-spacing="-1">MCP Debugger</text>
+
+  <!-- tagline -->
+  <text x="640" y="232" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="20" font-weight="500" fill="#c9d1d9">Stop guessing. Diagnose &amp; fix MCP server config issues in 30 seconds.</text>
+
+  <!-- accent stripe -->
+  <rect x="540" y="248" width="200" height="2" fill="url(#stripe)"/>
+
+  <!-- pillars -->
+  <g font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#c9d1d9" letter-spacing="2">
+    <g transform="translate(388, 285)">
+      <rect x="-50" y="-18" width="100" height="36" rx="18" fill="#a371f7" fill-opacity="0.12" stroke="#a371f7" stroke-opacity="0.55" stroke-width="1.5"/>
+      <text x="0" y="5" text-anchor="middle">SCAN</text>
+    </g>
+
+    <text x="453" y="288" text-anchor="middle" font-size="20" font-weight="400" fill="#484f58">→</text>
+
+    <g transform="translate(548, 285)">
+      <rect x="-60" y="-18" width="120" height="36" rx="18" fill="#a371f7" fill-opacity="0.12" stroke="#a371f7" stroke-opacity="0.55" stroke-width="1.5"/>
+      <text x="0" y="5" text-anchor="middle">DIAGNOSE</text>
+    </g>
+
+    <text x="623" y="288" text-anchor="middle" font-size="20" font-weight="400" fill="#484f58">→</text>
+
+    <g transform="translate(708, 285)">
+      <rect x="-35" y="-18" width="70" height="36" rx="18" fill="#a371f7" fill-opacity="0.12" stroke="#a371f7" stroke-opacity="0.55" stroke-width="1.5"/>
+      <text x="0" y="5" text-anchor="middle">FIX</text>
+    </g>
+
+    <text x="763" y="288" text-anchor="middle" font-size="20" font-weight="400" fill="#484f58">→</text>
+
+    <g transform="translate(848, 285)">
+      <rect x="-50" y="-18" width="100" height="36" rx="18" fill="#a371f7" fill-opacity="0.12" stroke="#a371f7" stroke-opacity="0.55" stroke-width="1.5"/>
+      <text x="0" y="5" text-anchor="middle">VERIFY</text>
+    </g>
+  </g>
+
+  <!-- footer stats -->
+  <text x="640" y="362" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="500" fill="#8b949e">10 failure patterns · bilingual docs · examples included · zero dependencies</text>
+</svg>

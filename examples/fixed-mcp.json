@@ -1,0 +1,31 @@
+{
+  "mcpServers": {
+    "playwright": {
+      "type": "stdio",
+      "command": "cmd",
+      "args": ["/c", "npx", "-y", "@playwright/mcp"]
+    },
+    "amap-maps": {
+      "type": "stdio",
+      "command": "cmd",
+      "args": ["/c", "npx", "-y", "@amap/amap-maps-mcp-server"]
+    },
+    "needs-api-key": {
+      "type": "stdio",
+      "command": "cmd",
+      "args": ["/c", "npx", "-y", "weather-mcp"],
+      "env": {
+        "OPENWEATHER_API_KEY": "<paste-your-real-key-here>"
+      }
+    },
+    "remote-sse": {
+      "type": "sse",
+      "url": "http://localhost:8080/sse"
+    },
+    "filesystem": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["/absolute/path/to/filesystem-mcp/dist/index.js"]
+    }
+  }
+}

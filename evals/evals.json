@@ -1,0 +1,255 @@
+{
+  "version": 1,
+  "description": "Evaluation test cases for mcp-debugger. Each case is a real-world MCP configuration failure pattern, with the user message that triggers it, the config context that reproduces it, and the expected diagnostic findings + fixes the skill should produce.",
+  "scoring": {
+    "phase_coverage": "Did the skill hit all expected phases (scan / diagnose / fix / verify)?",
+    "finding_detection": "Did the skill identify every expected finding (by id)?",
+    "fix_correctness": "Did the prescribed fix match the expected fix?",
+    "false_positives": "Were any non-issues flagged? (penalty)"
+  },
+  "cases": [
+    {
+      "id": "legacy-global-mcp-location",
+      "name": "Legacy ~/.claude/mcp.json servers silently ignored in 2.x",
+      "severity": "critical",
+      "user_input": "I just upgraded to Claude Code 2.x and now my global MCP servers don't show up. The project-level ones in .mcp.json still work fine.",
+      "context": {
+        "platform": "any",
+        "configs": {
+          "~/.claude.json": "{ \"numStartups\": 42, \"projects\": {} }",
+          "~/.claude/mcp.json": "{ \"mcpServers\": { \"playwright\": {...}, \"amap-maps\": {...}, \"firecrawl\": {...} } }",
+          "./.mcp.json": "{ \"mcpServers\": { \"mcp-hosts-installer\": {...} } }"
+        }
+      },
+      "expected_phases": ["scan", "diagnose", "fix", "verify"],
+      "expected_findings": [
+        {
+          "id": "legacy-global-location",
+          "severity": "critical",
+          "match_any_phrase": ["legacy", "~/.claude/mcp.json", "ignored"]
+        }
+      ],
+      "expected_fixes": [
+        "Migrate all servers from ~/.claude/mcp.json into ~/.claude.json → top-level mcpServers",
+        "Delete the legacy ~/.claude/mcp.json file",
+        "Remind user to restart Claude Code"
+      ]
+    },
+    {
+      "id": "missing-type-field",
+      "name": "Server silently dropped because 'type' field is missing",
+      "severity": "warning",
+      "user_input": "I added a new MCP server to my config but it doesn't show up. The other 4 servers I have still work fine.",
+      "context": {
+        "platform": "any",
+        "configs": {
+          "~/.claude.json": "{ \"mcpServers\": { \"a\": {\"type\":\"stdio\",\"command\":\"npx\"}, \"b\": {\"type\":\"stdio\",\"command\":\"npx\"}, \"broken\": {\"command\":\"npx\",\"args\":[\"-y\",\"my-mcp\"]} } }"
+        }
+      },
+      "expected_phases": ["scan", "diagnose", "fix"],
+      "expected_findings": [
+        {
+          "id": "missing-type-field",
+          "severity": "warning",
+          "match_any_phrase": ["missing 'type'", "no type", "type field", "silently dropped"]
+        }
+      ],
+      "expected_fixes": [
+        "Add '\"type\": \"stdio\"' (or '\"type\": \"sse\"') to the 'broken' server entry"
+      ]
+    },
+    {
+      "id": "windows-cmd-wrapper",
+      "name": "npx server fails on Windows without cmd /c wrapper",
+      "severity": "warning",
+      "user_input": "My MCP servers work perfectly on macOS but fail the moment I clone the project onto Windows. npx throws weird 'cannot find module' errors.",
+      "context": {
+        "platform": "windows",
+        "configs": {
+          "~/.claude.json": "{ \"mcpServers\": { \"playwright\": {\"type\":\"stdio\",\"command\":\"npx\",\"args\":[\"-y\",\"@playwright/mcp\"]} } }"
+        }
+      },
+      "expected_phases": ["scan", "diagnose", "fix"],
+      "expected_findings": [
+        {
+          "id": "windows-cmd-wrapper",
+          "severity": "warning",
+          "match_any_phrase": ["cmd /c", "wrapper", "windows", "npx"]
+        }
+      ],
+      "expected_fixes": [
+        "Change command to \"cmd\" and args to [\"/c\", \"npx\", \"-y\", \"@playwright/mcp\"]"
+      ]
+    },
+    {
+      "id": "json-syntax-error",
+      "name": "Trailing comma breaks ALL servers in that file",
+      "severity": "critical",
+      "user_input": "Suddenly none of my MCP servers work. They all worked yesterday. I didn't change anything except add a comma somewhere.",
+      "context": {
+        "platform": "any",
+        "configs": {
+          "~/.claude.json": "{ \"mcpServers\": { \"a\": {\"type\":\"stdio\"}, \"b\": {\"type\":\"stdio\"}, } }"
+        }
+      },
+      "expected_phases": ["scan", "diagnose", "fix"],
+      "expected_findings": [
+        {
+          "id": "json-invalid",
+          "severity": "critical",
+          "match_any_phrase": ["invalid JSON", "syntax error", "trailing comma"]
+        }
+      ],
+      "expected_fixes": [
+        "Remove the trailing comma",
+        "Validate the JSON parses"
+      ]
+    },
+    {
+      "id": "wrong-npm-package",
+      "name": "Package named xxx-mcp isn't actually an MCP server",
+      "severity": "warning",
+      "user_input": "Server starts and shows in the list, but exposes zero tools. What gives?",
+      "context": {
+        "platform": "any",
+        "configs": {
+          "~/.claude.json": "{ \"mcpServers\": { \"foo\": {\"type\":\"stdio\",\"command\":\"npx\",\"args\":[\"-y\",\"foo-mcp-cli\"]} } }"
+        },
+        "verification": "npm view foo-mcp-cli dependencies — does NOT include @modelcontextprotocol/sdk"
+      },
+      "expected_phases": ["scan", "diagnose", "fix"],
+      "expected_findings": [
+        {
+          "id": "wrong-package",
+          "severity": "warning",
+          "match_any_phrase": ["@modelcontextprotocol/sdk", "not an MCP", "no tools"]
+        }
+      ],
+      "expected_fixes": [
+        "Verify the package actually implements MCP",
+        "Replace with the correct MCP server package"
+      ]
+    },
+    {
+      "id": "project-not-enabled",
+      "name": "Project servers in .mcp.json not loading",
+      "severity": "warning",
+      "user_input": "I defined MCP servers in my project's .mcp.json but they don't show up. ~/.claude.json has nothing in it.",
+      "context": {
+        "platform": "any",
+        "configs": {
+          "./.mcp.json": "{ \"mcpServers\": { \"filesystem\": {...}, \"github\": {...}, \"docker\": {...} } }",
+          "./.claude/settings.local.json": "{}"
+        }
+      },
+      "expected_phases": ["scan", "diagnose", "fix"],
+      "expected_findings": [
+        {
+          "id": "project-not-enabled",
+          "severity": "warning",
+          "match_any_phrase": ["enableAllProjectMcpServers", "not enabled", "enable"]
+        }
+      ],
+      "expected_fixes": [
+        "Add '\"enableAllProjectMcpServers\": true' to .claude/settings.local.json"
+      ]
+    },
+    {
+      "id": "utf8-gbk-encoding-corruption",
+      "name": "Chinese Windows GBK encoding corrupts ~/.claude.json Unicode",
+      "severity": "warning",
+      "user_input": "On my Windows 11 Chinese-locale machine, every time Claude Code saves ~/.claude.json, all my MCP servers break and I see garbled characters.",
+      "context": {
+        "platform": "windows-zh",
+        "configs": {
+          "~/.claude.json": "Has non-ASCII user-prompts or comments; was edited by a tool that doesn't force UTF-8"
+        }
+      },
+      "expected_phases": ["scan", "diagnose", "fix"],
+      "expected_findings": [
+        {
+          "id": "encoding-utf8-required",
+          "severity": "warning",
+          "match_any_phrase": ["GBK", "UTF-8", "encoding", "corrupt"]
+        }
+      ],
+      "expected_fixes": [
+        "Always read/write ~/.claude.json with encoding='utf-8' on Windows",
+        "Restore from a clean backup if corruption has already happened"
+      ]
+    },
+    {
+      "id": "stale-settings-mcpservers",
+      "name": "Stale mcpServers in settings.json shadows everything",
+      "severity": "warning",
+      "user_input": "After upgrading Claude Code 2.x, ALL my MCP servers disappeared — even the ones I had for months.",
+      "context": {
+        "platform": "any",
+        "configs": {
+          "~/.claude/settings.json": "{ \"mcpServers\": {}, \"theme\": \"dark\" }"
+        }
+      },
+      "expected_phases": ["scan", "diagnose", "fix"],
+      "expected_findings": [
+        {
+          "id": "stale-settings-mcpservers",
+          "severity": "warning",
+          "match_any_phrase": ["stale", "settings.json", "no longer", "mcpServers"]
+        }
+      ],
+      "expected_fixes": [
+        "Remove the 'mcpServers' key from settings.json"
+      ]
+    },
+    {
+      "id": "sse-missing-url",
+      "name": "SSE server missing url field — won't connect",
+      "severity": "warning",
+      "user_input": "I configured a remote SSE MCP server but Claude can't connect to it. The MCP server status stays 'failed'.",
+      "context": {
+        "platform": "any",
+        "configs": {
+          "~/.claude.json": "{ \"mcpServers\": { \"remote\": {\"type\":\"sse\",\"command\":\"echo\"} } }"
+        }
+      },
+      "expected_phases": ["scan", "diagnose", "fix"],
+      "expected_findings": [
+        {
+          "id": "sse-missing-url",
+          "severity": "warning",
+          "match_any_phrase": ["sse", "url", "missing"]
+        }
+      ],
+      "expected_fixes": [
+        "Add '\"url\": \"http://...\"' to the SSE server entry",
+        "Verify the URL is reachable with curl"
+      ]
+    },
+    {
+      "id": "server-exits-immediately",
+      "name": "Server starts then exits immediately (missing env / package not installed)",
+      "severity": "hidden",
+      "user_input": "My MCP server appears in the list but its tools never load. After a few seconds it's gone.",
+      "context": {
+        "platform": "any",
+        "configs": {
+          "~/.claude.json": "{ \"mcpServers\": { \"api-server\": {\"type\":\"stdio\",\"command\":\"npx\",\"args\":[\"-y\",\"api-mcp\"]} } }"
+        },
+        "smoke_test": "timeout 3 npx -y api-mcp — exits within 3 seconds instead of hanging on stdin"
+      },
+      "expected_phases": ["scan", "diagnose", "fix"],
+      "expected_findings": [
+        {
+          "id": "server-exits-immediately",
+          "severity": "warning",
+          "match_any_phrase": ["exit", "smoke test", "missing env", "missing API key"]
+        }
+      ],
+      "expected_fixes": [
+        "Run the command directly in a terminal to see the error message",
+        "Add missing env vars",
+        "Verify the package is installed and node version is >= 18"
+      ]
+    }
+  ]
+}

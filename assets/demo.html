@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>MCP Debugger — demo terminal</title>
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #1a1a1a;
+    color: #d4d4d4;
+    font-family: 'Cascadia Code', 'JetBrains Mono', 'Fira Code', Menlo, Consolas, 'Courier New', monospace;
+    font-size: 14px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .window {
+    width: 1080px;
+    padding: 28px 36px 36px;
+    box-sizing: border-box;
+  }
+
+  .traffic {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 18px;
+  }
+  .traffic span {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    display: block;
+  }
+  .traffic .r { background: #ff5f57; }
+  .traffic .y { background: #febc2e; }
+  .traffic .g { background: #28c840; }
+
+  .prompt {
+    color: #8b949e;
+    margin-right: 8px;
+  }
+  .user-line .user-text {
+    color: #d4d4d4;
+  }
+  .user-line .quote-mark {
+    color: #6e7681;
+  }
+
+  .section { margin: 18px 0; }
+  .indent { padding-left: 0; }
+
+  .row {
+    margin: 6px 0;
+    white-space: pre;
+  }
+
+  .ok { color: #56d364; }
+  .warn { color: #e3b341; }
+  .crit { color: #f85149; font-weight: 700; }
+  .err { color: #f85149; }
+  .info { color: #d4d4d4; }
+  .path { color: #79c0ff; }
+  .arrow { color: #d2a8ff; }
+  .muted { color: #8b949e; }
+  .div { color: #484f58; }
+
+  pre { margin: 0; font-family: inherit; }
+
+  .badge {
+    display: inline-block;
+    padding: 1px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    margin-right: 8px;
+  }
+  .badge-crit { background: rgba(248, 81, 73, 0.15); color: #ff7b72; }
+  .badge-ok { background: rgba(86, 211, 100, 0.15); color: #56d364; }
+
+  .label-good { color: #56d364; margin-right: 6px; }
+  .label-warn { color: #e3b341; margin-right: 6px; }
+
+  blockquote {
+    margin: 0;
+    border-left: 3px solid #30363d;
+    padding-left: 16px;
+    color: #8b949e;
+  }
+</style>
+</head>
+<body>
+<div class="window">
+  <div class="traffic"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+
+  <!-- USER INPUT -->
+  <div class="section user-line">
+    <div class="row"><span class="prompt">❯</span><span class="user-text">I just upgraded to Claude Code 2.x and now my global MCP servers don't show up. <span class="muted">The project-level ones in .mcp.json still work fine.</span></span></div>
+  </div>
+
+  <!-- SKILL HEADER -->
+  <div class="section">
+    <div class="row"><span class="arrow">⚙</span> <strong>mcp-debugger</strong> <span class="muted">— auto-triggered</span></div>
+  </div>
+
+  <!-- SCAN -->
+  <div class="section">
+    <div class="row"><span class="muted">Scanning config sources...</span></div>
+    <div class="row"><span class="label-good">✓</span><span class="path">  ~/.claude.json</span><span class="muted">          </span><span class="info">→ 0 servers  <span class="muted">(no mcpServers key)</span></span></div>
+    <div class="row"><span class="label-good">✓</span><span class="path">  ./.mcp.json</span><span class="muted">             </span><span class="info">→ 2 servers</span></div>
+    <div class="row"><span class="label-warn">⚠</span><span class="path">  ~/.claude/mcp.json</span><span class="muted">      </span><span class="info">→ 6 servers  <span class="crit">← LEGACY · ignored in 2.x</span></span></div>
+  </div>
+
+  <!-- ISSUES -->
+  <div class="section">
+    <div class="row"><strong>Issues Found</strong></div>
+    <div class="row muted">─────────────────────────────────────────────</div>
+    <div class="row"><span class="badge badge-crit">CRITICAL</span><span class="info">6 global servers are in the legacy </span><span class="path">~/.claude/mcp.json</span><span class="info"> file.</span></div>
+    <div class="row muted">              Claude Code 2.x does not load this file. They will be ignored.</div>
+  </div>
+
+  <!-- FIX -->
+  <div class="section">
+    <div class="row"><strong>Migration Plan</strong></div>
+    <div class="row muted">─────────────────────────────────────────────</div>
+    <div class="row"><span class="arrow">→</span> Move all 6 servers from <span class="path">~/.claude/mcp.json</span> to <span class="path">~/.claude.json</span></div>
+    <div class="row"><span class="muted">  top-level </span><span class="path">mcpServers</span><span class="muted"> key</span></div>
+    <div class="row"><span class="arrow">→</span> Preserve order and metadata</div>
+    <div class="row"><span class="arrow">→</span> Remove legacy file afterwards</div>
+  </div>
+
+  <!-- VERIFY -->
+  <div class="section">
+    <div class="row"><span class="label-good">✓</span><span class="ok">Executing migration...</span><span class="muted">            </span><span class="ok">Done</span></div>
+    <div class="row"><span class="label-good">✓</span><span class="ok">Validating ~/.claude.json...</span><span class="muted">  </span><span class="ok">Valid JSON · 6 servers</span></div>
+    <div class="row"><span class="label-good">✓</span><span class="ok">Verifying no legacy left...</span><span class="muted">   </span><span class="ok">Clean</span></div>
+  </div>
+
+  <!-- REMINDER -->
+  <div class="section">
+    <blockquote>
+      <span class="warn">⏰</span> Please restart Claude Code for the changes to take effect.
+    </blockquote>
+  </div>
+</div>
+</body>
+</html>

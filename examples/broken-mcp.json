@@ -1,0 +1,36 @@
+{
+  "mcpServers": {
+    "playwright": {
+      "command": "npx",
+      "args": ["-y", "@playwright/mcp"]
+    },
+    "amap-maps": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@amap/amap-maps-mcp-server"]
+    },
+    "foo-not-really-mcp": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "foo-cli-tool-mcp"],
+      "env": {}
+    },
+    "needs-api-key": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "weather-mcp"],
+      "env": {
+        "API_KEY": "your-key-here"
+      }
+    },
+    "remote-sse": {
+      "type": "sse",
+      "command": "echo"
+    },
+    "last-server": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "some-package"],
+    },
+  }
+}
