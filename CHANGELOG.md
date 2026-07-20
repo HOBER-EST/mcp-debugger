@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] — 2026-07-20
+
+### 🎉 Open-source release
+
+First public release with full documentation, regression tests, and visual assets.
+
 ### Added
 - Comprehensive English README with hero, comparison table, symptom reference, and demo
 - Bilingual parity for Chinese README (was previously thinner)
@@ -16,6 +22,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `examples/fixed-mcp.json` — same config after the skill resolves everything
 - `examples/README.md` — walk-through of what each broken line demonstrates
 - `CONTRIBUTING.md` — guide for adding new failure patterns and eval cases
+- `assets/hero.svg` — README banner (1280×400)
+- `assets/demo.html` + `assets/demo.png` — Claude Code terminal screenshot of the skill in action
+- `assets/capture-demo.ps1` — regenerates the screenshot
 - GitHub issue templates (`bug_report.md`, `feature_request.md`) and PR template
 
 ### Changed
