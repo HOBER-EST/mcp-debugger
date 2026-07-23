@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🔧 MCP Debugger
+# 🔧 MCP Debugger（调用mcp有问题？一个skill解决）
 
 **Stop guessing. Diagnose and fix MCP server configuration issues in one pass.**
 
